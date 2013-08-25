@@ -33,9 +33,7 @@ public class Chain<T> { // TAD que viene a ser un array indefinido. Ventaja:
 
 	public void insert(T info, int i) throws OutOfBoundsException {
 		// inserta Info en la posición i contando desde 1 hasta index
-		if (i > index) {
-			throw new OutOfBoundsException();
-		} else {
+	
 			Link<T> newLink = new Link<T>(info);
 			if (i == 1) {
 				newLink.setNext(this.head.getNext());
@@ -51,7 +49,6 @@ public class Chain<T> { // TAD que viene a ser un array indefinido. Ventaja:
 				index++;
 			}
 		}
-	}
 
 	public T getData(int i) throws OutOfBoundsException {// recupera el dato en
 															// i, contando desde

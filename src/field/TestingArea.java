@@ -8,34 +8,23 @@ public class TestingArea {
 
 	public static void main(String[] args) throws OutOfBoundsException {
 		Effect eff = new Effect();
-		Clock clock = new Clock();
+		Deck deck = new Deck();
 		int i=0;
-		for(; i < 5; i++){
-			clock.bufferDamage(new Card("",i,"",0,0,"",eff));
+		for(; i < 10; i++){
+			deck.moveToTop(new Card("",i,"",0,0,"",eff));
 		}
-		System.out.println(clock.toString());
-		System.out.println(clock.cardsInBuffer());
-		clock.transferBuffer();
-		System.out.println(clock.toString());
-		for(;i<10; i++){
-			clock.bufferDamage(new Card("",i,"",0,0,"",eff));
+		System.out.println(deck.toString());
+		deck.shuffleDeck();
+		System.out.println(deck.toString());
+		System.out.println("["+deck.draw()+"]"+"["+deck.draw()+"]"+"["+deck.draw()+"]"+"["+deck.draw()+"]");
+		System.out.println(deck.toString());
+		for(; i < 20; i++){
+			deck.moveToTop(new Card("",i,"",0,0,"",eff));
 		}
-		System.out.println(clock.toString());
-		clock.transferBuffer();
-		System.out.println(clock.toString());
-		clock.levelUp();
-		System.out.println(clock.toString());
-		for(;i<25; i++){
-			clock.bufferDamage(new Card("",i,"",0,0,"",eff));
-		}
-		clock.transferBuffer();
-		System.out.println(clock.toString());
-		clock.levelUp();
-		System.out.println(clock.toString());
-		clock.levelUp();
-		System.out.println(clock.toString());
-		System.out.println(clock.heal(0));
-		System.out.println(clock.toString());
-	}
-
-}
+		deck.shuffleDeck();
+		System.out.println(deck.toString());
+		System.out.println(deck.getCard(6));
+		System.out.println(deck.toString());
+		System.out.println(deck.extractCard(6));
+		System.out.println(deck.toString());
+}}
