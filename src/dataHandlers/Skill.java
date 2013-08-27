@@ -1,11 +1,14 @@
 package dataHandlers;
 
+import auxClasses.TTypes;
+
 public class Skill {
-	private int type; // 0: condición de uso de la carta, 1: skill auto o evento
-						// / climax, 2 skill de main phase o evento de main, 3
-						// skill continua
+	private TTypes type;
 	private int stockCost;
-	public int getType() {
+	private String[] condition;
+	private String[] effect;
+	
+	public TTypes getType() {
 		return type;
 	}
 
@@ -20,10 +23,6 @@ public class Skill {
 	public String[] getEffect() {
 		return effect;
 	}
-
-	private String[] condition;
-	private String[] effect;
-
 	public boolean checkCondition() {
 		return true;
 	}

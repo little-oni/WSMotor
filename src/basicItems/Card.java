@@ -1,6 +1,6 @@
 package basicItems;
 
-import auxClasses.OutOfBoundsException;
+import auxClasses.*;
 import dataHandlers.Effect;
 
 public class Card {
@@ -8,8 +8,7 @@ public class Card {
 	private int nCopias;
 	private int identificador;
 	private String title;
-	private int color; // cutrEnum, paso de hacerlo ahora, es más fácil poner 1
-						// a amarillo, 2 a verde, etc...
+	private TColors color;
 	protected int trigger; // otro tontiswitch que se pondrá según el caso. Para
 							// personajes y eventos me lo ahorro y lo pongo como
 							// número
@@ -23,30 +22,53 @@ public class Card {
 		this.nCopias = 4;
 		this.identificador = 000000;
 		this.title = "title";
-		this.color = 0;
+		this.color = TColors.DEFAULT;
 		this.trigger = 0;
 		this.texto = "texto";
 		this.efecto = new Effect();
 	}
-	public Card(String nombre, int identificador, String title, int color,
+	public Card(String nombre, int identificador, String title, String color,
 			int trigger, String texto, Effect efecto) {
 		this.nombre = nombre;
 		this.nCopias = 4;
 		this.identificador = identificador;
 		this.title = title;
-		this.color = color;
+		switch (color){
+		case "amarillo":
+			this.color = TColors.AMARILLO;
+		case  "verde":
+			this.color = TColors.VERDE;
+		case "rojo":
+			this.color = TColors.ROJO;
+		case "azul":
+			this.color=TColors.AZUL;
+		default:
+			this.color = TColors.DEFAULT;
+		}
+		
 		this.trigger = trigger;
 		this.texto = texto;
 		this.efecto = efecto;
 	}
 
-	public Card(String nombre, int identificador, String title, int color,
+	public Card(String nombre, int identificador, String title, String color,
 			int trigger, String texto, Effect efecto, int nCopias) {
 		this.nombre = nombre;
 		this.nCopias = nCopias;
 		this.identificador = identificador;
 		this.title = title;
-		this.color = color;
+		switch (color){
+		case "amarillo":
+			this.color = TColors.AMARILLO;
+		case  "verde":
+			this.color = TColors.VERDE;
+		case "rojo":
+			this.color = TColors.ROJO;
+		case "azul":
+			this.color=TColors.AZUL;
+		default:
+			this.color = TColors.DEFAULT;
+		}
 		this.trigger = trigger;
 		this.texto = texto;
 		this.efecto = efecto;
@@ -78,7 +100,7 @@ public class Card {
 		return title;
 	}
 
-	public int getColor() {
+	public TColors getColor() {
 		return color;
 	}
 
@@ -95,7 +117,7 @@ public class Card {
 		// color, stock, etc)
 		boolean check = true;
 		for(int i = 1; (i <= this.efecto.getIndex())&&check ; i++){
-			if (this.efecto.getSkills().getData(i).getType()==0){
+			if (this.efecto.getSkills().getData(i).getType()==TTypes.CONDICION){
 				check = this.efecto.getSkills().getData(i).checkCondition();
 			}
 		}
@@ -104,5 +126,7 @@ public class Card {
 	public String toString(){
 		return "" +identificador;
 	}
-
+	public boolean equals(Card card){//TODO
+		return true;
+	}
 }

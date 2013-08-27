@@ -104,5 +104,8 @@ public class Chain<T> { // TAD que viene a ser un array indefinido. Ventaja:
 		this.head=new Link<T>(null);
 		this.index=0;
 	}
+	public boolean isEmpty(){
+		return index==0;
+	}
 
 }

@@ -52,7 +52,7 @@ public class Deck {
 															// del deck
 		Vector<Card> list = new Vector<Card>(1, 1);
 		int fix = cardsInDeck();
-		for (int i = 1; i <= fix; i++) {
+		for (int i = 0; i < fix; i++) {
 			list.add(draw());
 		}
 		Collections.shuffle(list);

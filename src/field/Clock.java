@@ -80,11 +80,11 @@ public class Clock {
 		clockInUse = new Card[7];
 	}
 
-	public Card heal(int i) { // Devuelve la carta en el índice vectorial i y la
+	public Card heal(int i) { // Devuelve la carta en el índice encadenado i y la
 								// elimina del clock
-		Card card = clockInUse[i];
-		for (; i < clockInUse.length - 1; i++) {
-			clockInUse[i] = clockInUse[i + 1];
+		Card card = clockInUse[i-1];
+		for (; i-1 < clockInUse.length - 1; i++) {
+			clockInUse[i-1] = clockInUse[i];
 		}
 		clockInUse[6] = null;
 		return card;
@@ -97,7 +97,6 @@ public class Clock {
 														// el búfer a clock y
 														// vuelve a comprobar el
 														// estado
-		clearClock();
 		for (int i = 1; i <= over7.getIndex(); i++) {
 			bufferDamage(over7.getData(i));
 		}
@@ -106,8 +105,8 @@ public class Clock {
 	}
 
 	public Card cardFromClock(int i) {// Devuelve la carta en la posición
-										// vectorial i
-		return clockInUse[i];
+										// encadenada i
+		return clockInUse[i-1];
 	}
 
 	public String toString() {// toString
