@@ -13,20 +13,32 @@ public class Hand {
 		hand = new Chain<Card>();
 	}
 
+	/*
+	 * Devuelve el número de cartas en mano.
+	 */
 	public int cardsInHand() {
 		return hand.getIndex();
 	}
 
+	/*
+	 * Devuelve y elimina la carta con el índice encadenado "i".
+	 */
 	public Card discard(int i) throws OutOfBoundsException {
 		Card card = hand.getData(i);
 		hand.remove(i);
 		return card;
 	}
 
+	/*
+	 * Añade "card" a la mano.
+	 */
 	public void addToHand(Card card) {
 		hand.add(card);
 	}
 
+	/*
+	 * Randomiza el orden de la mano.
+	 */
 	public void shuffle() throws OutOfBoundsException {
 		Vector<Card> list = new Vector<Card>(1, 1);
 		int fix = cardsInHand();
@@ -39,6 +51,9 @@ public class Hand {
 		}
 	}
 
+	/*
+	 * Devuelve, sin eliminar, la carta con el índice encadenado "i".
+	 */
 	public Card cardFromHand(int i) throws OutOfBoundsException {
 		return hand.getData(i);
 	}
@@ -54,7 +69,11 @@ public class Hand {
 		}
 		return res + "\n";
 	}
-	public Card[] getHand() throws OutOfBoundsException{
+
+	/*
+	 * toArray().
+	 */
+	public Card[] getHand() throws OutOfBoundsException {
 		Card[] array = new Card[hand.getIndex()];
 		for (int i = 0; i < array.length; i++) {
 			array[i] = hand.getData(i + 1);

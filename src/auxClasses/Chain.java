@@ -1,8 +1,14 @@
 package auxClasses;
 
-public class Chain<T> { // TAD que viene a ser un array indefinido. Ventaja:
-						// puede almacenar listas largas. Desventaja: out of
-						// bounds
+import basicItems.Card;
+
+/* Array indefinido de elementos de tipo T. Puede almacenar cualquier cantidad de datos
+ * y el espacio en memoria se va asignando según el número varía. 
+ * La función "getIndex()" funciona como el "length" de los array.
+ * ATENCION: a la hora de buscar elementos, funciona con índices encadenados, 
+ * no vectoriales: empieza en 1 y acaba en Index.
+ */
+public class Chain<T> {
 	private Link<T> head;
 	private int index;
 
@@ -11,13 +17,19 @@ public class Chain<T> { // TAD que viene a ser un array indefinido. Ventaja:
 		index = 0;
 	}
 
-	public void setHead(Link<T> head) {// esto ... no sé muy bien para qué está,
-										// puede ser útil para borrar la lista
-										// rápido.
+	/*
+	 * Asigna un Link como cabeza. En principio, no es útil en la mayoría de
+	 * casos pero puede encontrar usu utilidad.
+	 */
+	public void setHead(Link<T> head) {
 		this.head = head;
 	}
 
-	public void add(T info) {// añade Info a la cadena, al final
+	/*
+	 * Coloca "info" como último elemento de la cadena. Info no es un Link, sino
+	 * el datoque se coloca en el link.
+	 */
+	public void add(T info) {
 		if (this.head == null) {
 			this.head = new Link<T>(info);
 		} else {
@@ -31,28 +43,31 @@ public class Chain<T> { // TAD que viene a ser un array indefinido. Ventaja:
 		this.index++;
 	}
 
+	/*
+	 * Inserta "info" en la posición i. "i" se cuenta desde 1, no desde 0, ya
+	 * que es un indice encadenado.
+	 */
 	public void insert(T info, int i) throws OutOfBoundsException {
-		// inserta Info en la posición i contando desde 1 hasta index
-	
-			Link<T> newLink = new Link<T>(info);
-			if (i == 1) {
-				newLink.setNext(this.head.getNext());
-				this.head.setNext(newLink);
-				index++;
-			} else {
-				Link<T> onUse = this.head;
-				for (int j = 0; j < i - 1; j++) {
-					onUse = onUse.getNext();
-				}
-				newLink.setNext(onUse.getNext());
-				onUse.setNext(newLink);
-				index++;
+		Link<T> newLink = new Link<T>(info);
+		if (i == 1) {
+			newLink.setNext(this.head.getNext());
+			this.head.setNext(newLink);
+			index++;
+		} else {
+			Link<T> onUse = this.head;
+			for (int j = 0; j < i - 1; j++) {
+				onUse = onUse.getNext();
 			}
+			newLink.setNext(onUse.getNext());
+			onUse.setNext(newLink);
+			index++;
 		}
+	}
 
-	public T getData(int i) throws OutOfBoundsException {// recupera el dato en
-															// i, contando desde
-															// 1 hasta index
+	/*
+	 * Recupera el elemento en la posición "i", equivalente al array[i]
+	 */
+	public T getData(int i) throws OutOfBoundsException {
 		if (i > index)
 			throw new OutOfBoundsException();
 		else {
@@ -64,10 +79,11 @@ public class Chain<T> { // TAD que viene a ser un array indefinido. Ventaja:
 		}
 	}
 
-	public void remove(int i) throws OutOfBoundsException {// borra el elemento
-															// en i, contando
-															// desde 1 hasta
-															// index
+	/*
+	 * Elimina el elemento "i". NO RELLENA CON NULL. La cadena pasa a tener un
+	 * elemento menos.
+	 */
+	public void remove(int i) throws OutOfBoundsException {
 		if (i > index)
 			throw new OutOfBoundsException();
 		else if (i == 1) {
@@ -94,18 +110,25 @@ public class Chain<T> { // TAD que viene a ser un array indefinido. Ventaja:
 		}
 		return out;
 	}
-	public int getIndex(){
+
+	public int getIndex() {
 		return this.index;
 	}
-	public Link<T> getHead(){
+
+	public Link<T> getHead() {
 		return this.head;
 	}
-	public void clear(){
-		this.head=new Link<T>(null);
-		this.index=0;
+	/*
+	 * Vacía la cadena, borrando todos los elementos. 
+	 * */
+	public void clear() {
+		this.head = new Link<T>(null);
+		this.index = 0;
 	}
-	public boolean isEmpty(){
-		return index==0;
+	/*
+	 * Devuelve verdadero si la cadena no tiene ningún elemento. 
+	 * */
+	public boolean isEmpty() {
+		return index == 0;
 	}
-
 }

@@ -9,13 +9,16 @@ public class Clock {
 	private Chain<Card> buffer;
 	private Chain<Card> over7;
 
-	public Clock() {// Constructor genérico. Crea deck vacío.
+	public Clock() {
 		clockInUse = new Card[7];
 		buffer = new Chain<Card>();
 		over7 = new Chain<Card>();
 	}
 
-	public int cardsInClock() {// Devuelve el número de cartas en Clock.
+	/*
+	 * Devuelve el número de cartas en el clock
+	 */
+	public int cardsInClock() {
 		int i = 0;
 		boolean stop = false;
 		for (; i < clockInUse.length && !stop;) {
@@ -26,40 +29,48 @@ public class Clock {
 		return i;
 	}
 
-	public int cardsInBuffer() {// Devuelve el número de cartas en el búfer
+	/*
+	 * DEBUG. Devuelve el número de cartas en el búfer.
+	 */
+	public int cardsInBuffer() {
 		return this.buffer.getIndex();
 	}
 
-	public int cardsInOver7() {// Devuelve el número de cartas por encima de las
-								// 7 permitidas
+	/*
+	 * DEBUG. Devuelve el número de cartas en over7.
+	 */
+	public int cardsInOver7() {
 		return this.over7.getIndex();
 	}
 
-	public void bufferDamage(Card card) {// Pone "card" en el búfer para
-											// evaluarla
+	/*
+	 * Coloca "card" en la última posición del búfer.
+	 */
+	public void bufferDamage(Card card) {
 		buffer.add(card);
 	}
 
-	public void clearBuffer() {// Vacía el búfer
-		buffer.setHead(null);
+	/*
+	 * Vacía el búfer y elimina todos los elementos.
+	 */
+	public void clearBuffer() {
+		buffer.clear();
 	}
 
-	public Card unbuffer() throws OutOfBoundsException {// Devuelve la primera
-														// carta el búfer y la
-														// elimina de éste
+	/*
+	 * Devuelve la primera carta del búfer y la elimina.
+	 */
+	public Card unbuffer() throws OutOfBoundsException {
 		Card card = buffer.getData(1);
 		buffer.remove(1);
 		return card;
 	}
 
-	public void transferBuffer() throws OutOfBoundsException {// Vacía el búfer
-																// y transfiere
-																// todas las
-																// cartas que
-																// pueda a
-																// clock. Las
-																// restantes van
-																// a over7
+	/*
+	 * Vacía el búfer y transfiere las cartas al Clock. Si no es posible, las
+	 * almacena en over7
+	 */
+	public void transferBuffer() throws OutOfBoundsException {
 		boolean stop = buffer.getHead() == null;
 		for (int i = 0; i < clockInUse.length && !stop; i++) {
 			if (clockInUse[i] == null && buffer.getIndex() != 0) {
@@ -76,27 +87,30 @@ public class Clock {
 		}
 	}
 
-	public void clearClock() {// Vacía el clock
+	/*
+	 * Vacía el clock. (useless)
+	 */
+	public void clearClock() {
 		clockInUse = new Card[7];
 	}
 
-	public Card heal(int i) { // Devuelve la carta en el índice encadenado i y la
-								// elimina del clock
-		Card card = clockInUse[i-1];
-		for (; i-1 < clockInUse.length - 1; i++) {
-			clockInUse[i-1] = clockInUse[i];
+	/*
+	 * Devuelve la carta con el índice encadenado "i" y la elimina del clock.
+	 */
+	public Card heal(int i) {
+		Card card = clockInUse[i - 1];
+		for (; i - 1 < clockInUse.length - 1; i++) {
+			clockInUse[i - 1] = clockInUse[i];
 		}
 		clockInUse[6] = null;
 		return card;
 	}
 
-	public void levelUp() throws OutOfBoundsException {// borra el clock,
-														// transfire las cartas
-														// que pueda desde over7
-														// a bufer, transfiere
-														// el búfer a clock y
-														// vuelve a comprobar el
-														// estado
+	/*
+	 * Borra el clock y transfiere las cartas que queden en over7 al búfer, y
+	 * luego las coloca en el clock.
+	 */
+	public void levelUp() throws OutOfBoundsException {
 		for (int i = 1; i <= over7.getIndex(); i++) {
 			bufferDamage(over7.getData(i));
 		}
@@ -104,12 +118,14 @@ public class Clock {
 		transferBuffer();
 	}
 
-	public Card cardFromClock(int i) {// Devuelve la carta en la posición
-										// encadenada i
-		return clockInUse[i-1];
+	/*
+	 * Devuelve la carta en la posición encadenada "i", sin borrarla
+	 */
+	public Card cardFromClock(int i) {
+		return clockInUse[i - 1];
 	}
 
-	public String toString() {// toString
+	public String toString() {
 		String res = "Cartas en Clock: " + cardsInClock() + "\n";
 		for (int i = 0; i < clockInUse.length; i++) {
 			if (clockInUse[i] == null) {
@@ -123,10 +139,11 @@ public class Clock {
 		return res;
 	}
 
-	public Card[] getBuffer() throws OutOfBoundsException {// Devuelve un array
-															// con todos los
-															// elementos del
-															// búfer
+	/*
+	 * Esto es un sustituto del "toArray", no he podido imlementar ese método en
+	 * "Chain"
+	 */
+	public Card[] getBuffer() throws OutOfBoundsException {
 		Card[] array = new Card[buffer.getIndex()];
 		for (int i = 0; i < array.length; i++) {
 			array[i] = buffer.getData(i + 1);
@@ -134,15 +151,11 @@ public class Clock {
 		return array;
 	}
 
-	public Card[] getClock() {// Devuelve un array con todos los elementos del
-								// clock
+	public Card[] getClock() {
 		return clockInUse;
 	}
 
-	public Card[] getOver7() throws OutOfBoundsException {// Devuelve un array
-															// con todos los
-															// elementos en
-															// over7
+	public Card[] getOver7() throws OutOfBoundsException {
 		Card[] array = new Card[over7.getIndex()];
 		for (int i = 0; i < array.length; i++) {
 			array[i] = over7.getData(i + 1);

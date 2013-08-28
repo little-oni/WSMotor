@@ -6,30 +6,52 @@ import auxClasses.OutOfBoundsException;
 
 public class Stock {
 	Chain<Card> stock;
-	public Stock(){
+
+	public Stock() {
 		stock = new Chain<Card>();
 	}
-	public int cardsInStock(){
+
+	/*
+	 * Devuelve el número de cartas en el Stock.
+	 */
+	public int cardsInStock() {
 		return stock.getIndex();
 	}
-	public void moveToStock(Card card){
+
+	/*
+	 * Coloca la carta "card" como la última del Stock.
+	 */
+	public void moveToStock(Card card) {
 		stock.add(card);
 	}
-	public Card payFirst() throws OutOfBoundsException{
+
+	/*
+	 * Devuelve la primera carta del Stock y la elimina.
+	 */
+	public Card payFirst() throws OutOfBoundsException {
 		Card store = stock.getData(1);
 		stock.remove(1);
 		return store;
 	}
-	public Card payAny(int i) throws OutOfBoundsException{
+
+	/*
+	 * Devuelve la carta en la posición encadenada "i" y la elimina.
+	 */
+	public Card payAny(int i) throws OutOfBoundsException {
 		Card store = stock.getData(i);
 		stock.remove(i);
 		return store;
 	}
-	public Card getCard(int i) throws OutOfBoundsException{
+
+	/*
+	 * Devuelve, sin eliminar, la carta en la posición encadenada "i".
+	 */
+	public Card getCard(int i) throws OutOfBoundsException {
 		return stock.getData(i);
 	}
-	public String toString(){
-		String res = "Cartas en Stock: " +cardsInStock()+"\n";
+
+	public String toString() {
+		String res = "Cartas en Stock: " + cardsInStock() + "\n";
 		for (int i = 1; i <= stock.getIndex(); i++) {
 			try {
 				res = res + "[" + getCard(i) + "]";
@@ -39,7 +61,11 @@ public class Stock {
 		}
 		return res + "\n";
 	}
-	public Card[] getStock() throws OutOfBoundsException{
+
+	/*
+	 * toArray().
+	 */
+	public Card[] getStock() throws OutOfBoundsException {
 		Card[] array = new Card[stock.getIndex()];
 		for (int i = 0; i < array.length; i++) {
 			array[i] = stock.getData(i + 1);

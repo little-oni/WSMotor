@@ -18,5 +18,10 @@ public class Character extends Card {
 		super(nombre, identificador, title, color, trigger, texto, efecto);
 	}
 
+	public void stand() {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }

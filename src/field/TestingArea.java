@@ -25,15 +25,15 @@ public class TestingArea {
 		System.out.println(p.level);
 		System.out.println(p.waiting);
 		for(int j = 0; j < 5; j++){
-			game.draw(p);}
+			game.draw(p,1);}
 		System.out.println(p.hand);
 		System.out.println(deck);
-		game.topToStock(p);
+		game.topToStock(p,1);
 		System.out.println(p.stock);
 		System.out.println(deck);
 		System.out.println(p.waiting);
 		for(int j = 0; j < 4; j++){
-			game.draw(p);}
+			game.draw(p,1);}
 		System.out.println(deck);
 		System.out.println(p.waiting);
 		System.out.println(p.clock);
