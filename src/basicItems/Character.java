@@ -23,5 +23,35 @@ public class Character extends Card {
 		
 	}
 
+	public boolean standing() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public void rest() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public int getCurrentSoul() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public int getCurrentPower() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public void reverse() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public int getLevel() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 
 }

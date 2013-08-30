@@ -3,20 +3,43 @@ package game;
 import field.*;
 import auxClasses.*;
 import basicItems.*;
+import basicItems.Character;
 
 import java.util.Scanner;
 
 public class Game {
+	private Player p1;
+	private Player p2;
 	private TPhases currentPhase;
-	private boolean currentPlayer;
+	private Player currentPlayer;
+	private Player inactivePlayer;
 	private CheckArea check;
 	private boolean active;
+	private Character atacker;
+	private Character defender;
 
 	public Game() {
+		p1 = new Player();
+		p2 = new Player();
 		currentPhase = TPhases.STANDPH;
-		currentPlayer = true;
+		currentPlayer = p1;
+		inactivePlayer = p2;
 		check = new CheckArea();
 		active = true;
+		atacker = new Character();
+		defender = new Character();
+	}
+
+	public Game(Deck deck1, Deck deck2) {
+		p1 = new Player(deck1);
+		p2 = new Player(deck2);
+		currentPhase = TPhases.STANDPH;
+		currentPlayer = p1;
+		inactivePlayer = p2;
+		check = new CheckArea();
+		active = true;
+		atacker = new Character();
+		defender = new Character();
 	}
 
 	/*
@@ -136,6 +159,7 @@ public class Game {
 			p.waiting.trash(p.clock.heal(0));
 		}
 		p.clock.levelUp();
+		checkEffects();
 		active = p.level.cardsInLevel() == 4;
 		if (p.clock.cardsInClock() == 7) {
 			levelUp(p);
@@ -208,15 +232,264 @@ public class Game {
 		}
 	}
 
-	public void standPhase(Player p) {
+	/*
+	 * Pone los personajes en Stand. Comprueba efectos DESPUÉS de hacerlo. Si
+	 * hay algún personaje que no se ponga en Stand por algo, durante la
+	 * comprobación se pondría en Rest (y no ejecutría una nueva comprobación).
+	 */
+	public void standPhase() {
 		currentPhase = TPhases.STANDPH;
-		for (int i = 0; i < p.stage.getStage().length; i++)
-			p.stage.getStage()[i].stand();
+		for (int i = 0; i < currentPlayer.stage.getStage().length; i++)
+			currentPlayer.stage.getStage()[i].stand();
 		checkEffects();
 	}
 
-	public void clockPhase(Player p) {
+	/*
+	 * Roba y comprueba efectos ANTES Y DESPUÉS de robar.
+	 */
+	public void drawPhase() throws OutOfBoundsException, GameOver {
+		currentPhase = TPhases.DRAWPH;
+		checkEffects();
+		draw(currentPlayer, 1);
+		checkEffects();
+	}
 
+	/*
+	 * Pregunta si se quiere poner una carta al clock. En caso afirmativo, lo
+	 * hace y roba dos. Comprueba efectos ANTES Y DESPUÉS.
+	 */
+	public void clockPhase() throws OutOfBoundsException, GameOver {
+		currentPhase = TPhases.CLOCKPH;
+		checkEffects();
+		Scanner input = new Scanner(System.in);
+		System.out.println("¿Desea colocar una carta en el clock?");
+		int n = input.nextInt();
+		if (n == 1) {
+			System.out.println("Seleccione la carta a poner en clock");
+			int i = input.nextInt();
+			currentPlayer.clock.bufferDamage(currentPlayer.hand.discard(i));
+			currentPlayer.clock.transferBuffer();
+			draw(currentPlayer, 2);
+		}
+		checkEffects();
+	}
+
+	/*
+	 * Fase genérica. Lo único que hace es preguntar si hay efectos que hacer /
+	 * cartas que jugar.
+	 */
+	public void mainPhase() {
+		currentPhase = TPhases.MAINPH;
+		boolean main = true;
+		while (main) {
+			checkEffects();
+			Scanner input = new Scanner(System.in);
+			System.out.println("¿Acabar main phase? (0 = no, 1 = sí)");
+			int in = input.nextInt();
+			if (in == 1) {
+				main = false;
+			}
+		}
+		checkEffects();
+	}
+
+	/*
+	 * Nuevamente, fase genérica, sólo pregunta si se puede hacer algo.
+	 */
+	public void climaxPhase() {
+		currentPhase = TPhases.CLIMAXPH;
+		checkEffects();
+	}
+
+	/*
+	 * Y viene la battle, explicada paso a paso.
+	 */
+	public void atackPhase() throws OutOfBoundsException, GameOver {
+		currentPhase = TPhases.ATTACKPH;
+		checkEffects();
+		boolean atack = true;
+		while (atack) {
+			/*
+			 * Cuenta los personajes en Stand. En caso de que no haya, no
+			 * procede a atacar.
+			 */
+			int charStanding = 0;
+			for (int i = 0; i < currentPlayer.stage.frontRow().length; i++) {
+				if (currentPlayer.stage.frontRow()[i].standing()) {
+					charStanding++;
+				}
+			}
+			if (charStanding != 0) {
+				/*
+				 * En caso de que haya personajes en Stand, pregunta si se
+				 * quiere atacar. En caso negativo, procede a acabar la batlle.
+				 */
+				Scanner input = new Scanner(System.in);
+				System.out.println("¿Declarar un ataque? (0 = no, 1 = sí)");
+				int conf = input.nextInt();
+				if (conf == 1) {
+					/*
+					 * En caso de que quiera atacar, se entra en Atack Step. (En
+					 * este punto NO se comprueban efectos por razones que ahora
+					 * se verán).
+					 */
+					currentPhase = TPhases.ATTACKST;
+					/*
+					 * Cuenta los personajes en Stand y te da la opción de
+					 * elegir con cuál atacar.
+					 */
+					int[] standingChar = new int[3];
+					int n = 0;
+					for (int i = 0; i < currentPlayer.stage.frontRow().length; i++) {
+						if (currentPlayer.stage.frontRow()[i] != null
+								&& currentPlayer.stage.frontRow()[i].standing()) {
+							standingChar[n] = i + 1;
+							n++;
+						}
+					}
+					String standingChars = "";
+					for (int i = 0; i < standingChar.length; i++) {
+						if (standingChar[i] != 0) {
+							standingChars = standingChars + standingChar[i]
+									+ ", ";
+						}
+					}
+					System.out
+							.println("Seleccione personaje: " + standingChars);
+					int j = input.nextInt();
+					/*
+					 * Asigna atacante y defensor según el personaje
+					 * seleccionado. En ESTE momento se comprueban los efectos.
+					 * La razón son los personajes que desvían el ataque (te
+					 * estoy hablando a ti, guardaespaldas). Dado que esta
+					 * comprobación se hace cada vez que se declara un ataque,
+					 * en caso de que las condiciones de desvío no se den, el
+					 * defensor no se reasigna y punto.
+					 */
+					this.atacker = currentPlayer.stage.frontRow()[j - 1];
+					this.defender = inactivePlayer.stage.frontRow()[j - 1];
+					checkEffects();
+					/*
+					 * Comprueba si hay o no Direct Atack
+					 */
+					if (defender != null) {
+						/*
+						 * En caso de que no haya, pregunta por el tipo de
+						 * ataque a realizar
+						 */
+						System.out
+								.println("Seleccione tipo de ataque. (0 = front, 1 = side)");
+						int tatk = input.nextInt();
+						/*
+						 * En caso de front atack:
+						 */
+						if (tatk == 0) {
+							/*
+							 * El personaje se pone en Rest. Se comprueban
+							 * efectos de "cuando esta carta ataque/sea atacada"
+							 */
+							atacker.rest();
+							checkEffects();
+							/*
+							 * Entramos en Trigger Step. Se comprueba el trigger
+							 * y los efectos
+							 */
+							currentPhase = TPhases.TRIGGERST;
+							check.check(currentPlayer.deck.draw());
+							check.getCheck().trigger();
+							currentPlayer.stock.moveToStock(check.getCheck());
+							check.check(null);
+							checkEffects();
+							/*
+							 * Entramos en Counter Step. Sólo pregunta por los
+							 * efectos.
+							 */
+							currentPhase = TPhases.COUNTERST;
+							checkEffects();
+							/*
+							 * Entramos en Damage. El jugador defensor recibe
+							 * los daños que le corresponden y DESPUÉS se
+							 * comprueban los efectos.
+							 */
+							currentPhase = TPhases.DAMAGEST;
+							takeDamage(inactivePlayer, atacker.getCurrentSoul());
+							checkEffects();
+							/*
+							 * Entramos en Battle Step. Según el resultado de la
+							 * batalla, se ponen los personajes en Reverse y
+							 * DESPUÉS se comprueban los efectos
+							 */
+							currentPhase = TPhases.BATTLEST;
+							if (atacker.getCurrentPower() > defender
+									.getCurrentPower()) {
+								defender.reverse();
+								checkEffects();
+							} else if (atacker.getCurrentPower() < defender
+									.getCurrentPower()) {
+								atacker.reverse();
+								checkEffects();
+							} else {
+								atacker.reverse();
+								defender.reverse();
+								checkEffects();
+							}
+						}
+						/*
+						 * En caso de Side Atack, se procede de manera similar,
+						 * pero calculando el daño de la manera correspondiente.
+						 * En el caso de los Ghost, habrá que hacer que en este
+						 * momento ganen Soul igual al que perderían por el Side
+						 * Atack, sin refrescar la pantalla.
+						 */
+						else {
+							atacker.rest();
+							checkEffects();
+							currentPhase = TPhases.TRIGGERST;
+							check.check(currentPlayer.deck.draw());
+							check.getCheck().trigger();
+							currentPlayer.stock.moveToStock(check.getCheck());
+							check.check(null);
+							checkEffects();
+							currentPhase = TPhases.DAMAGEST;
+							takeDamage(inactivePlayer, atacker.getCurrentSoul()
+									- defender.getLevel());
+							checkEffects();
+						}
+					}
+					/*
+					 * En caso de Direct Atack, se procede omitiendo las fases
+					 * correspondientes y aplicando el modificador de daño.
+					 */
+					else {
+						atacker.rest();
+						checkEffects();
+						currentPhase = TPhases.TRIGGERST;
+						check.check(currentPlayer.deck.draw());
+						check.getCheck().trigger();
+						currentPlayer.stock.moveToStock(check.getCheck());
+						check.check(null);
+						checkEffects();
+						currentPhase = TPhases.DAMAGEST;
+						takeDamage(inactivePlayer, atacker.getCurrentSoul() + 1);
+						checkEffects();
+					}
+				} else {
+					atack = false;
+				}
+			} else {
+				atack = false;
+			}
+			/*
+			 * Se reinician los roles de atacante y defensor. Nótese que esta
+			 * parte del bucle sólo es alcanzable si ha habido ataque.
+			 */
+			atacker = new Character();
+			defender = new Character();
+		}
+		/*
+		 * Se comprueban los efectos al final de la battle.
+		 */
+		checkEffects();
 	}
 
 	public void checkEffects() {

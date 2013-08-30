@@ -129,4 +129,8 @@ public class Card {
 	public boolean equals(Card card){//TODO
 		return true;
 	}
+	public void trigger() {
+		// TODO Auto-generated method stub
+		
+	}
 }
