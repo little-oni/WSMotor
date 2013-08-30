@@ -53,5 +53,10 @@ public class Character extends Card {
 		return 0;
 	}
 
+	public boolean reversed() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 
 }

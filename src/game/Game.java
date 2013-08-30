@@ -208,7 +208,7 @@ public class Game {
 
 	/*
 	 * Coloca la primera carta del deck en el clock sin comprobar si es un
-	 * Clímax. Si hay 7 cartas en el clock, ejecuta levelUp(). Si en algún
+	 * Climax. Si hay 7 cartas en el clock, ejecuta levelUp(). Si en algun
 	 * momento el deck se acaba, ejecuta deckReset(true).
 	 */
 	public void topToClock(Player p) throws OutOfBoundsException, GameOver {
@@ -233,9 +233,9 @@ public class Game {
 	}
 
 	/*
-	 * Pone los personajes en Stand. Comprueba efectos DESPUÉS de hacerlo. Si
+	 * Pone los personajes en Stand. Comprueba efectos DESPUES de hacerlo. Si
 	 * hay algún personaje que no se ponga en Stand por algo, durante la
-	 * comprobación se pondría en Rest (y no ejecutría una nueva comprobación).
+	 * comprobación se pondrian en Rest (y no ejecutria una nueva comprobacion).
 	 */
 	public void standPhase() {
 		currentPhase = TPhases.STANDPH;
@@ -245,7 +245,7 @@ public class Game {
 	}
 
 	/*
-	 * Roba y comprueba efectos ANTES Y DESPUÉS de robar.
+	 * Roba y comprueba efectos ANTES Y DESPUES de robar.
 	 */
 	public void drawPhase() throws OutOfBoundsException, GameOver {
 		currentPhase = TPhases.DRAWPH;
@@ -275,7 +275,7 @@ public class Game {
 	}
 
 	/*
-	 * Fase genérica. Lo único que hace es preguntar si hay efectos que hacer /
+	 * Fase generica. Lo unico que hace es preguntar si hay efectos que hacer /
 	 * cartas que jugar.
 	 */
 	public void mainPhase() {
@@ -294,7 +294,7 @@ public class Game {
 	}
 
 	/*
-	 * Nuevamente, fase genérica, sólo pregunta si se puede hacer algo.
+	 * Nuevamente, fase generica, sólo pregunta si se puede hacer algo.
 	 */
 	public void climaxPhase() {
 		currentPhase = TPhases.CLIMAXPH;
@@ -331,12 +331,12 @@ public class Game {
 					/*
 					 * En caso de que quiera atacar, se entra en Atack Step. (En
 					 * este punto NO se comprueban efectos por razones que ahora
-					 * se verán).
+					 * se veran).
 					 */
 					currentPhase = TPhases.ATTACKST;
 					/*
-					 * Cuenta los personajes en Stand y te da la opción de
-					 * elegir con cuál atacar.
+					 * Cuenta los personajes en Stand y te da la opcion de
+					 * elegir con cual atacar.
 					 */
 					int[] standingChar = new int[3];
 					int n = 0;
@@ -358,12 +358,12 @@ public class Game {
 							.println("Seleccione personaje: " + standingChars);
 					int j = input.nextInt();
 					/*
-					 * Asigna atacante y defensor según el personaje
+					 * Asigna atacante y defensor segun el personaje
 					 * seleccionado. En ESTE momento se comprueban los efectos.
-					 * La razón son los personajes que desvían el ataque (te
+					 * La razon son los personajes que desvian el ataque (te
 					 * estoy hablando a ti, guardaespaldas). Dado que esta
 					 * comprobación se hace cada vez que se declara un ataque,
-					 * en caso de que las condiciones de desvío no se den, el
+					 * en caso de que las condiciones de desvio no se den, el
 					 * defensor no se reasigna y punto.
 					 */
 					this.atacker = currentPlayer.stage.frontRow()[j - 1];
@@ -401,23 +401,23 @@ public class Game {
 							check.check(null);
 							checkEffects();
 							/*
-							 * Entramos en Counter Step. Sólo pregunta por los
+							 * Entramos en Counter Step. Solo pregunta por los
 							 * efectos.
 							 */
 							currentPhase = TPhases.COUNTERST;
 							checkEffects();
 							/*
 							 * Entramos en Damage. El jugador defensor recibe
-							 * los daños que le corresponden y DESPUÉS se
+							 * los daños que le corresponden y DESPUES se
 							 * comprueban los efectos.
 							 */
 							currentPhase = TPhases.DAMAGEST;
 							takeDamage(inactivePlayer, atacker.getCurrentSoul());
 							checkEffects();
 							/*
-							 * Entramos en Battle Step. Según el resultado de la
+							 * Entramos en Battle Step. Segun el resultado de la
 							 * batalla, se ponen los personajes en Reverse y
-							 * DESPUÉS se comprueban los efectos
+							 * DESPUES se comprueban los efectos
 							 */
 							currentPhase = TPhases.BATTLEST;
 							if (atacker.getCurrentPower() > defender
@@ -437,8 +437,8 @@ public class Game {
 						/*
 						 * En caso de Side Atack, se procede de manera similar,
 						 * pero calculando el daño de la manera correspondiente.
-						 * En el caso de los Ghost, habrá que hacer que en este
-						 * momento ganen Soul igual al que perderían por el Side
+						 * En el caso de los Ghost, habra que hacer que en este
+						 * momento ganen Soul igual al que perderian por el Side
 						 * Atack, sin refrescar la pantalla.
 						 */
 						else {
@@ -480,8 +480,8 @@ public class Game {
 				atack = false;
 			}
 			/*
-			 * Se reinician los roles de atacante y defensor. Nótese que esta
-			 * parte del bucle sólo es alcanzable si ha habido ataque.
+			 * Se reinician los roles de atacante y defensor. Notese que esta
+			 * parte del bucle solo es alcanzable si ha habido ataque.
 			 */
 			atacker = new Character();
 			defender = new Character();
@@ -490,6 +490,42 @@ public class Game {
 		 * Se comprueban los efectos al final de la battle.
 		 */
 		checkEffects();
+	}
+
+	/*
+	 * Encore Step, se retiran los personajes en reverse. Se comprueban los
+	 * efectos ANTES, DESPUES y cuando se retiran los personajes.
+	 */
+	public void encoreStep() {
+		currentPhase = TPhases.ENCOREST;
+		checkEffects();
+		for (int i = 0; i < currentPlayer.stage.frontRow().length; i++) {
+			if (currentPlayer.stage.frontRow()[i] != null
+					&& currentPlayer.stage.frontRow()[i].reversed()) {
+				currentPlayer.waiting.trash(currentPlayer.stage.retire(i + 1));
+				checkEffects();
+
+			}
+			if (inactivePlayer.stage.frontRow()[i] != null
+					&& inactivePlayer.stage.frontRow()[i].reversed()) {
+				inactivePlayer.waiting
+						.trash(inactivePlayer.stage.retire(i + 1));
+				checkEffects();
+			}
+		}
+		checkEffects();
+	}
+
+	/*
+	 * End Phase. Comprueba efectos (en este momento los efectos que se acaban
+	 * desaparecen) y cede el control al otro jugador
+	 */
+	public void endPhase() {
+		currentPhase = TPhases.ENDPH;
+		checkEffects();
+		Player store = currentPlayer;
+		currentPlayer = inactivePlayer;
+		inactivePlayer = store;
 	}
 
 	public void checkEffects() {
