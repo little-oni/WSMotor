@@ -1,5 +1,6 @@
 package field;
 
+import auxClasses.TField;
 import basicItems.*;
 
 public class Level {
@@ -51,6 +52,7 @@ public class Level {
 		for (int i = 0; i < level.length && !stop; i++) {
 			if (level[i] == null) {
 				level[i] = card;
+				card.setField(TField.LEVEL);
 				stop = true;
 			}
 		}

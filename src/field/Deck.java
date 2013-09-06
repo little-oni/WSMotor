@@ -25,19 +25,21 @@ public class Deck {
 	 */
 	public void moveToBottom(Card card) {
 		deck.add(card);
+		card.setField(TField.DECK);
 	}
 
 	/*
 	 * Coloca "card" en la parte superior del deck.
 	 */
-	public void moveToTop(Card card) throws OutOfBoundsException {
+	public void moveToTop(Card card) {
 		deck.insert(card, 1);
+		card.setField(TField.DECK);
 	}
 
 	/*
 	 * Devuelve y elimina la primera carta del deck.
 	 */
-	public Card draw() throws OutOfBoundsException {
+	public Card draw() {
 		Card card = deck.getData(1);
 		deck.remove(1);
 		return card;
@@ -46,7 +48,7 @@ public class Deck {
 	/*
 	 * Devuelve y elimina la carta con el índice encadenado "i".
 	 */
-	public Card extractCard(int i) throws OutOfBoundsException {
+	public Card extractCard(int i) {
 		Card card = deck.getData(i);
 		deck.remove(i);
 		return card;
@@ -55,7 +57,7 @@ public class Deck {
 	/*
 	 * Randomiza el orden del Deck.
 	 */
-	public void shuffleDeck() throws OutOfBoundsException {
+	public void shuffleDeck() {
 		Vector<Card> list = new Vector<Card>(1, 1);
 		int fix = cardsInDeck();
 		for (int i = 0; i < fix; i++) {
@@ -70,26 +72,22 @@ public class Deck {
 	/*
 	 * Devuelve, sin eliminar, la carta con el índice encadenado "i".
 	 */
-	public Card getCard(int i) throws OutOfBoundsException {
+	public Card getCard(int i){
 		return deck.getData(i);
 	}
 
 	public String toString() {
 		String res = "Cartas en deck: " + cardsInDeck() + "\n";
 		for (int i = 1; i <= deck.getIndex(); i++) {
-			try {
 				res = res + "[" + getCard(i) + "]";
-			} catch (OutOfBoundsException e) {
-				e.printStackTrace();
 			}
-		}
 		return res + "\n";
 	}
 
 	/*
 	 * toArray().
 	 */
-	public Card[] getDeck() throws OutOfBoundsException {
+	public Card[] getDeck() {
 		Card[] array = new Card[deck.getIndex()];
 		for (int i = 0; i < array.length; i++) {
 			array[i] = deck.getData(i + 1);

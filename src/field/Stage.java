@@ -1,5 +1,6 @@
 package field;
 
+import auxClasses.TField;
 import basicItems.Character;
 
 public class Stage {
@@ -27,6 +28,19 @@ public class Stage {
 	 */
 	public void entry(Character chara, int i) {
 		stage[i - 1] = chara;
+		switch (i) {
+		case 1:
+			chara.setField(TField.STAGELF);
+		case 2:
+			chara.setField(TField.STAGECF);
+		case 3:
+			chara.setField(TField.STAGERF);
+		case 4:
+			chara.setField(TField.STAGELB);
+		case 5:
+			chara.setField(TField.STAGERB);
+		}
+
 	}
 
 	/*
@@ -74,6 +88,30 @@ public class Stage {
 		Character store = stage[i - 1];
 		stage[i - 1] = stage[j - 1];
 		stage[j - 1] = store;
+		switch (i) {
+		case 1:
+			stage[i - 1].setField(TField.STAGELF);
+		case 2:
+			stage[i - 1].setField(TField.STAGECF);
+		case 3:
+			stage[i - 1].setField(TField.STAGERF);
+		case 4:
+			stage[i - 1].setField(TField.STAGELB);
+		case 5:
+			stage[i - 1].setField(TField.STAGERB);
+		}
+		switch (j) {
+		case 1:
+			stage[j - 1].setField(TField.STAGELF);
+		case 2:
+			stage[j - 1].setField(TField.STAGECF);
+		case 3:
+			stage[j - 1].setField(TField.STAGERF);
+		case 4:
+			stage[j - 1].setField(TField.STAGELB);
+		case 5:
+			stage[j - 1].setField(TField.STAGERB);
+		}
 	}
 
 	public String toString() {

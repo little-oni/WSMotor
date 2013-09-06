@@ -14,32 +14,33 @@ public class Hand {
 	}
 
 	/*
-	 * Devuelve el número de cartas en mano.
+	 * Devuelve el nï¿½mero de cartas en mano.
 	 */
 	public int cardsInHand() {
 		return hand.getIndex();
 	}
 
 	/*
-	 * Devuelve y elimina la carta con el índice encadenado "i".
+	 * Devuelve y elimina la carta con el ï¿½ndice encadenado "i".
 	 */
-	public Card discard(int i) throws OutOfBoundsException {
+	public Card discard(int i){
 		Card card = hand.getData(i);
 		hand.remove(i);
 		return card;
 	}
 
 	/*
-	 * Añade "card" a la mano.
+	 * Aï¿½ade "card" a la mano.
 	 */
 	public void addToHand(Card card) {
 		hand.add(card);
+		card.setField(TField.HAND);
 	}
 
 	/*
 	 * Randomiza el orden de la mano.
 	 */
-	public void shuffle() throws OutOfBoundsException {
+	public void shuffle() {
 		Vector<Card> list = new Vector<Card>(1, 1);
 		int fix = cardsInHand();
 		for (int i = 1; i <= fix; i++) {
@@ -52,20 +53,17 @@ public class Hand {
 	}
 
 	/*
-	 * Devuelve, sin eliminar, la carta con el índice encadenado "i".
+	 * Devuelve, sin eliminar, la carta con el ï¿½ndice encadenado "i".
 	 */
-	public Card cardFromHand(int i) throws OutOfBoundsException {
+	public Card cardFromHand(int i) {
 		return hand.getData(i);
 	}
 
 	public String toString() {
 		String res = "Cartas en mano: " + cardsInHand() + "\n";
 		for (int i = 1; i <= hand.getIndex(); i++) {
-			try {
-				res = res + "[" + cardFromHand(i) + "]";
-			} catch (OutOfBoundsException e) {
-				e.printStackTrace();
-			}
+			
+				res = res + "[" + cardFromHand(i) + "]";			
 		}
 		return res + "\n";
 	}
@@ -73,7 +71,7 @@ public class Hand {
 	/*
 	 * toArray().
 	 */
-	public Card[] getHand() throws OutOfBoundsException {
+	public Card[] getHand(){
 		Card[] array = new Card[hand.getIndex()];
 		for (int i = 0; i < array.length; i++) {
 			array[i] = hand.getData(i + 1);

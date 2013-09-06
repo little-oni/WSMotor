@@ -2,6 +2,7 @@ package field;
 
 import auxClasses.Chain;
 import auxClasses.OutOfBoundsException;
+import auxClasses.TField;
 import basicItems.Card;
 
 public class Clock {
@@ -60,7 +61,7 @@ public class Clock {
 	/*
 	 * Devuelve la primera carta del búfer y la elimina.
 	 */
-	public Card unbuffer() throws OutOfBoundsException {
+	public Card unbuffer() {
 		Card card = buffer.getData(1);
 		buffer.remove(1);
 		return card;
@@ -70,11 +71,12 @@ public class Clock {
 	 * Vacía el búfer y transfiere las cartas al Clock. Si no es posible, las
 	 * almacena en over7
 	 */
-	public void transferBuffer() throws OutOfBoundsException {
+	public void transferBuffer() {
 		boolean stop = buffer.getHead() == null;
 		for (int i = 0; i < clockInUse.length && !stop; i++) {
 			if (clockInUse[i] == null && buffer.getIndex() != 0) {
 				clockInUse[i] = this.unbuffer();
+				clockInUse[i].setField(TField.CLOCK);
 				stop = buffer.getHead() == null;
 			} else {
 			}
@@ -110,7 +112,7 @@ public class Clock {
 	 * Borra el clock y transfiere las cartas que queden en over7 al búfer, y
 	 * luego las coloca en el clock.
 	 */
-	public void levelUp() throws OutOfBoundsException {
+	public void levelUp() {
 		for (int i = 1; i <= over7.getIndex(); i++) {
 			bufferDamage(over7.getData(i));
 		}
@@ -143,7 +145,7 @@ public class Clock {
 	 * Esto es un sustituto del "toArray", no he podido imlementar ese método en
 	 * "Chain"
 	 */
-	public Card[] getBuffer() throws OutOfBoundsException {
+	public Card[] getBuffer() {
 		Card[] array = new Card[buffer.getIndex()];
 		for (int i = 0; i < array.length; i++) {
 			array[i] = buffer.getData(i + 1);
@@ -155,7 +157,7 @@ public class Clock {
 		return clockInUse;
 	}
 
-	public Card[] getOver7() throws OutOfBoundsException {
+	public Card[] getOver7() {
 		Card[] array = new Card[over7.getIndex()];
 		for (int i = 0; i < array.length; i++) {
 			array[i] = over7.getData(i + 1);

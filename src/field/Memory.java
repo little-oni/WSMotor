@@ -11,43 +11,42 @@ public class Memory {
 	}
 
 	/*
-	 * Devuelve el número de cartas en el Memory.
+	 * Devuelve el nï¿½mero de cartas en el Memory.
 	 */
 	public int cardsInMemory() {
 		return memory.getIndex();
 	}
 
 	/*
-	 * Coloca "card" en la última posición.
+	 * Coloca "card" en la ï¿½ltima posiciï¿½n.
 	 */
 	public void sendToMemory(Card card) {
 		memory.add(card);
+		card.setField(TField.MEMORY);
 	}
 
 	/*
-	 * Devuelve y elimina la carta con el índice encadenado "i".
+	 * Devuelve y elimina la carta con el ï¿½ndice encadenado "i".
 	 */
-	public Card extractFromMemory(int i) throws OutOfBoundsException {
+	public Card extractFromMemory(int i) {
 		Card store = memory.getData(i);
 		memory.remove(i);
 		return store;
 	}
 
 	/*
-	 * Devuelve, sin eliminar, la carta con el índice encadenado "i".
+	 * Devuelve, sin eliminar, la carta con el ï¿½ndice encadenado "i".
 	 */
-	public Card getCard(int i) throws OutOfBoundsException {
+	public Card getCard(int i) {
 		return memory.getData(i);
 	}
 
 	public String toString() {
 		String res = "";
 		for (int i = 1; i <= memory.getIndex(); i++) {
-			try {
+			
 				res = res + "[" + memory.getData(i) + "]";
-			} catch (OutOfBoundsException e) {
-				e.printStackTrace();
-			}
+		
 		}
 		return res;
 	}
@@ -55,7 +54,7 @@ public class Memory {
 	/*
 	 * toArray()
 	 */
-	public Card[] getMemory() throws OutOfBoundsException {
+	public Card[] getMemory() {
 		Card[] array = new Card[memory.getIndex()];
 		for (int i = 0; i < array.length; i++) {
 			array[i] = memory.getData(i + 1);

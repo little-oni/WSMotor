@@ -3,6 +3,7 @@ package field;
 import basicItems.Card;
 import auxClasses.Chain;
 import auxClasses.OutOfBoundsException;
+import auxClasses.TField;
 
 public class Stock {
 	Chain<Card> stock;
@@ -23,12 +24,13 @@ public class Stock {
 	 */
 	public void moveToStock(Card card) {
 		stock.add(card);
+		card.setField(TField.STOCK);
 	}
 
 	/*
 	 * Devuelve la primera carta del Stock y la elimina.
 	 */
-	public Card payFirst() throws OutOfBoundsException {
+	public Card payFirst() {
 		Card store = stock.getData(1);
 		stock.remove(1);
 		return store;
@@ -37,7 +39,7 @@ public class Stock {
 	/*
 	 * Devuelve la carta en la posición encadenada "i" y la elimina.
 	 */
-	public Card payAny(int i) throws OutOfBoundsException {
+	public Card payAny(int i) {
 		Card store = stock.getData(i);
 		stock.remove(i);
 		return store;
@@ -46,18 +48,14 @@ public class Stock {
 	/*
 	 * Devuelve, sin eliminar, la carta en la posición encadenada "i".
 	 */
-	public Card getCard(int i) throws OutOfBoundsException {
+	public Card getCard(int i) {
 		return stock.getData(i);
 	}
 
 	public String toString() {
 		String res = "Cartas en Stock: " + cardsInStock() + "\n";
 		for (int i = 1; i <= stock.getIndex(); i++) {
-			try {
 				res = res + "[" + getCard(i) + "]";
-			} catch (OutOfBoundsException e) {
-				e.printStackTrace();
-			}
 		}
 		return res + "\n";
 	}
@@ -65,7 +63,7 @@ public class Stock {
 	/*
 	 * toArray().
 	 */
-	public Card[] getStock() throws OutOfBoundsException {
+	public Card[] getStock() {
 		Card[] array = new Card[stock.getIndex()];
 		for (int i = 0; i < array.length; i++) {
 			array[i] = stock.getData(i + 1);

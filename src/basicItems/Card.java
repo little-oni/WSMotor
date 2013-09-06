@@ -1,99 +1,99 @@
 package basicItems;
 
 import auxClasses.*;
-import dataHandlers.Effect;
 
 public class Card {
-	private String nombre;
-	private int nCopias;
-	private int identificador;
+	protected String image;
+	private String name;
+	private int copies;
+	private int idcard;
+	private int idthiscard;
 	private String title;
 	private TColors color;
-	protected int trigger; // otro tontiswitch que se pondrá según el caso. Para
-							// personajes y eventos me lo ahorro y lo pongo como
-							// número
-	private String texto; // en principio, esto es independiente del efecto,
-							// sólo para funciones estéticas dentro del
-							// programa. Posiblemente no haga falta. Ni lo pongo
-							// en el constructor.
-	private Effect efecto;
-	public Card(){
-		this.nombre = "nombre";
-		this.nCopias = 4;
-		this.identificador = 000000;
+	protected int trigger;
+	private TField field;
+	private static int cards = 0;
+
+	public Card() {
+		this.name = "nombre";
+		this.copies = 4;
+		this.idcard = 000000;
+		this.idthiscard = cards;
 		this.title = "title";
 		this.color = TColors.DEFAULT;
 		this.trigger = 0;
-		this.texto = "texto";
-		this.efecto = new Effect();
+		this.field = TField.DECK;
+		this.image = "/card2171.jpg";
+		cards++;
 	}
+
 	public Card(String nombre, int identificador, String title, String color,
-			int trigger, String texto, Effect efecto) {
-		this.nombre = nombre;
-		this.nCopias = 4;
-		this.identificador = identificador;
+			int trigger, String ruta) {
+		this.name = nombre;
+		this.copies = 4;
+		this.idcard = identificador;
+		this.idthiscard = cards;
 		this.title = title;
-		switch (color){
+		switch (color) {
 		case "amarillo":
 			this.color = TColors.AMARILLO;
-		case  "verde":
+		case "verde":
 			this.color = TColors.VERDE;
 		case "rojo":
 			this.color = TColors.ROJO;
 		case "azul":
-			this.color=TColors.AZUL;
+			this.color = TColors.AZUL;
 		default:
 			this.color = TColors.DEFAULT;
 		}
-		
+
 		this.trigger = trigger;
-		this.texto = texto;
-		this.efecto = efecto;
+		this.field = TField.DECK;
+		this.image = ruta;
+		cards++;
 	}
 
 	public Card(String nombre, int identificador, String title, String color,
-			int trigger, String texto, Effect efecto, int nCopias) {
-		this.nombre = nombre;
-		this.nCopias = nCopias;
-		this.identificador = identificador;
+			int trigger, String ruta, int nCopias) {
+		this.name = nombre;
+		this.copies = nCopias;
+		this.idcard = identificador;
+		this.idthiscard = cards;
 		this.title = title;
-		switch (color){
+		switch (color) {
 		case "amarillo":
 			this.color = TColors.AMARILLO;
-		case  "verde":
+		case "verde":
 			this.color = TColors.VERDE;
 		case "rojo":
 			this.color = TColors.ROJO;
 		case "azul":
-			this.color=TColors.AZUL;
+			this.color = TColors.AZUL;
 		default:
 			this.color = TColors.DEFAULT;
 		}
 		this.trigger = trigger;
-		this.texto = texto;
-		this.efecto = efecto;
+		this.field = TField.DECK;
+		this.image = ruta;
+		cards++;
 	}
 
-	// Getters y Setters. No pongo setters para nada excepto el texto, ya que
-	// no es probable que se modifique.
-	public Effect getEfecto() {
-		return efecto;
+
+
+	public String getName() {
+		return name;
 	}
 
-	public void setEfecto(Effect efecto) {
-		this.efecto = efecto;
+	public int getnCopies() {
+		return copies;
 	}
 
-	public String getNombre() {
-		return nombre;
+	public int getID() {
+		return idcard;
 	}
 
-	public int getnCopias() {
-		return nCopias;
-	}
-
-	public int getIdentificador() {
-		return identificador;
+	public int getThisID() {
+		return idthiscard;
 	}
 
 	public String getTitle() {
@@ -108,29 +108,29 @@ public class Card {
 		return trigger;
 	}
 
-	public String getTexto() {
-		return texto;
+
+	public String toString() {
+		return "" + this.idcard + "; " + this.idthiscard;
 	}
 
-	public boolean playable() throws OutOfBoundsException {
-		// TODO : comprobar la situación del campo para casos generales (nivel,
-		// color, stock, etc)
-		boolean check = true;
-		for(int i = 1; (i <= this.efecto.getIndex())&&check ; i++){
-			if (this.efecto.getSkills().getData(i).getType()==TTypes.CONDICION){
-				check = this.efecto.getSkills().getData(i).checkCondition();
-			}
-		}
-		return check;
+	public boolean equals(Card card) {
+		return this.idcard == card.getID()
+				&& this.idthiscard == card.getThisID();
 	}
-	public String toString(){
-		return "" +identificador;
+
+	public boolean sameCard(Card card) {
+		return this.idcard == card.getID();
 	}
-	public boolean equals(Card card){//TODO
-		return true;
-	}
+
 	public void trigger() {
 		// TODO Auto-generated method stub
-		
+
+	}
+
+	public void setField(TField zone) {
+		this.field = zone;
+	}
+	public String getImage(){
+		return this.image;
 	}
 }

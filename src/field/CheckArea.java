@@ -1,5 +1,6 @@
 package field;
 
+import auxClasses.TField;
 import basicItems.Card;
 
 /*
@@ -15,10 +16,15 @@ public class CheckArea {
 
 	public void check(Card card) {
 		this.card = card;
+		card.setField(TField.CHECK);
 	}
 
 	public String toString() {
 		return card.toString();
+	}
+	
+	public void clear(){
+		this.card = null;
 	}
 
 	public Card getCheck() {

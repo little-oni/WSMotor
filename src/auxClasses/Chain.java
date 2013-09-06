@@ -3,9 +3,9 @@ package auxClasses;
 import basicItems.Card;
 
 /* Array indefinido de elementos de tipo T. Puede almacenar cualquier cantidad de datos
- * y el espacio en memoria se va asignando según el número varía. 
- * La función "getIndex()" funciona como el "length" de los array.
- * ATENCION: a la hora de buscar elementos, funciona con índices encadenados, 
+ * y el espacio en memoria se va asignando segï¿½n el nï¿½mero varï¿½a. 
+ * La funciï¿½n "getIndex()" funciona como el "length" de los array.
+ * ATENCION: a la hora de buscar elementos, funciona con ï¿½ndices encadenados, 
  * no vectoriales: empieza en 1 y acaba en Index.
  */
 public class Chain<T> {
@@ -18,7 +18,7 @@ public class Chain<T> {
 	}
 
 	/*
-	 * Asigna un Link como cabeza. En principio, no es útil en la mayoría de
+	 * Asigna un Link como cabeza. En principio, no es ï¿½til en la mayorï¿½a de
 	 * casos pero puede encontrar usu utilidad.
 	 */
 	public void setHead(Link<T> head) {
@@ -26,7 +26,7 @@ public class Chain<T> {
 	}
 
 	/*
-	 * Coloca "info" como último elemento de la cadena. Info no es un Link, sino
+	 * Coloca "info" como ï¿½ltimo elemento de la cadena. Info no es un Link, sino
 	 * el datoque se coloca en el link.
 	 */
 	public void add(T info) {
@@ -44,10 +44,10 @@ public class Chain<T> {
 	}
 
 	/*
-	 * Inserta "info" en la posición i. "i" se cuenta desde 1, no desde 0, ya
+	 * Inserta "info" en la posiciï¿½n i. "i" se cuenta desde 1, no desde 0, ya
 	 * que es un indice encadenado.
 	 */
-	public void insert(T info, int i) throws OutOfBoundsException {
+	public void insert(T info, int i) {
 		Link<T> newLink = new Link<T>(info);
 		if (i == 1) {
 			newLink.setNext(this.head.getNext());
@@ -65,28 +65,22 @@ public class Chain<T> {
 	}
 
 	/*
-	 * Recupera el elemento en la posición "i", equivalente al array[i]
+	 * Recupera el elemento en la posiciï¿½n "i", equivalente al array[i]
 	 */
-	public T getData(int i) throws OutOfBoundsException {
-		if (i > index)
-			throw new OutOfBoundsException();
-		else {
-			Link<T> onUse = this.head;
-			for (int j = 0; j < i; j++) {
-				onUse = onUse.getNext();
-			}
-			return onUse.getData();
+	public T getData(int i) {
+		Link<T> onUse = this.head;
+		for (int j = 0; j < i; j++) {
+			onUse = onUse.getNext();
 		}
+		return onUse.getData();
 	}
 
 	/*
 	 * Elimina el elemento "i". NO RELLENA CON NULL. La cadena pasa a tener un
 	 * elemento menos.
 	 */
-	public void remove(int i) throws OutOfBoundsException {
-		if (i > index)
-			throw new OutOfBoundsException();
-		else if (i == 1) {
+	public void remove(int i) {
+		if (i == 1) {
 			this.head = this.head.getNext();
 			index--;
 		} else {
@@ -102,11 +96,7 @@ public class Chain<T> {
 	public String toString() {
 		String out = "";
 		for (int i = 1; i <= this.index; i++) {
-			try {
-				out = out + this.getData(i).toString();
-			} catch (OutOfBoundsException e) {
-				e.printStackTrace();
-			}
+			out = out + this.getData(i).toString();
 		}
 		return out;
 	}
@@ -118,16 +108,18 @@ public class Chain<T> {
 	public Link<T> getHead() {
 		return this.head;
 	}
+
 	/*
-	 * Vacía la cadena, borrando todos los elementos. 
-	 * */
+	 * Vacï¿½a la cadena, borrando todos los elementos.
+	 */
 	public void clear() {
 		this.head = new Link<T>(null);
 		this.index = 0;
 	}
+
 	/*
-	 * Devuelve verdadero si la cadena no tiene ningún elemento. 
-	 * */
+	 * Devuelve verdadero si la cadena no tiene ningï¿½n elemento.
+	 */
 	public boolean isEmpty() {
 		return index == 0;
 	}
